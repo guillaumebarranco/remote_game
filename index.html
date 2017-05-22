@@ -107,21 +107,12 @@
 
 			function handleEvents() {
 
-				$('.button_left').on('click', function() {
-					socket.emit('left');
-				});
+				var elements = ['left', 'right',]
 
-				$('.button_right').on('click', function() {
-					socket.emit('right');
-				});
-
-				$('.button_top').on('click', function() {
-					socket.emit('top');
-				});
-
-				$('.button_bottom').on('click', function() {
-					socket.emit('bottom');
-				});
+				$('.button_left').on('click', function() { socket.emit('left');});
+				$('.button_right').on('click', function() { socket.emit('right');});
+				$('.button_top').on('click', function() { socket.emit('top');});
+				$('.button_bottom').on('click', function() { socket.emit('bottom'); });
 
 				socket.on('left', function() {
 					sanitizeBloc();

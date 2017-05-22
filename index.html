@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+
+	<head>
+		<title>Remote Game</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+
+		<style>
+
+			.buttons {
+				height: 95vh;
+				width: 95vw;
+				text-align: center;
+				display: flex;
+				justify-content: space-around;
+			}
+
+			.buttons button {
+				width: 100px;
+				height: 100px;
+			}
+			
+			.bloc {
+				width: 150px;
+				height: 150px;
+				background-color: red;
+				position: absolute;
+				left: 50%;
+				margin-left: -75px;
+				top: 50%;
+				margin-top: -75px;
+			}
+
+			.left {
+				left: 0%;
+				margin-left: 0px;
+			}
+
+			.right {
+				left: 100%;
+				margin-left: -150px;
+			}
+
+			.top {
+				top: 0%;
+				margin-top: 0;
+			}
+
+			.bottom {
+				top: 100%;
+				margin-top: -150px;
+			}
+
+			.button_left {
+				align-self: center;
+			}
+
+			.button_right {
+				align-self: center;
+			}
+
+			.button_top {
+				align-self: flex-start;
+			}
+
+			.button_bottom {
+				align-self: flex-end;
+			}
+
+		</style>
+	</head>
+
+	<body>
+
+		<div class="bloc"></div>
+
+		<div class="buttons">
+			<button class="button_left">Move</button>
+			<button class="button_top">Move</button>
+			<button class="button_bottom">Move</button>
+			<button class="button_right">Move</button>
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+
+		<script>
+
+			var socket = io('http://192.168.3.52:3000');
+
+			if($(document).width() > 1000) {
+				$('.buttons').hide();
+			} else {
+				$('.bloc').hide();
+			}
+
+			socket.on('connect', handleEvents);
+			// handleEvents();
+
+			function sanitizeBloc() {
+				$('.bloc').removeClass('left');
+				$('.bloc').removeClass('right');
+				$('.bloc').removeClass('top');
+				$('.bloc').removeClass('bottom');
+			}
+
+			function handleEvents() {
+
+				$('.button_left').on('click', function() {
+					socket.emit('left');
+				});
+
+				$('.button_right').on('click', function() {
+					socket.emit('right');
+				});
+
+				$('.button_top').on('click', function() {
+					socket.emit('top');
+				});
+
+				$('.button_bottom').on('click', function() {
+					socket.emit('bottom');
+				});
+
+				socket.on('left', function() {
+					sanitizeBloc();
+					$('.bloc').addClass('left');
+				});
+
+				socket.on('right', function() {
+					sanitizeBloc();
+					$('.bloc').addClass('right');
+				});
+
+				socket.on('top', function() {
+					sanitizeBloc();
+					$('.bloc').addClass('top');
+				});
+
+				socket.on('bottom', function() {
+					sanitizeBloc();
+					$('.bloc').addClass('bottom');
+				});
+			}
+
+		</script>
+
+	</body>
+</html>

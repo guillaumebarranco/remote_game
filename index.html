@@ -24,7 +24,7 @@
 			.bloc {
 				width: 150px;
 				height: 150px;
-				background-color: red;
+				/*background-color: red;*/
 				position: absolute;
 				left: 50%;
 				margin-left: -75px;
@@ -73,13 +73,18 @@
 
 	<body>
 
-		<div class="bloc"></div>
+		<!-- <div class="bloc"></div> -->
+		<img src="falcon.png" alt="" class="bloc">
 
-		<div class="buttons">
+		<div class="buttons desktop">
 			<button class="button_left">Move</button>
 			<button class="button_top">Move</button>
 			<button class="button_bottom">Move</button>
 			<button class="button_right">Move</button>
+		</div>
+
+		<div class="range desktop">
+			<input type="range" min="0" max="100" step="1">
 		</div>
 		
 		<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
@@ -87,10 +92,10 @@
 
 		<script>
 
-			var socket = io('http://192.168.3.52:3000');
+			var socket = io('http://192.168.3.240:3000');
 
 			if($(document).width() > 1000) {
-				$('.buttons').hide();
+				$('.desktop').hide();
 			} else {
 				$('.bloc').hide();
 			}
@@ -114,6 +119,13 @@
 				$('.button_top').on('click', function() { socket.emit('top');});
 				$('.button_bottom').on('click', function() { socket.emit('bottom'); });
 
+				$('.range input').on('change', function() {
+
+					socket.emit('range', {
+						value: $('.range input').val()
+					});
+				});
+
 				socket.on('left', function() {
 					sanitizeBloc();
 					$('.bloc').addClass('left');
@@ -132,6 +144,18 @@
 				socket.on('bottom', function() {
 					sanitizeBloc();
 					$('.bloc').addClass('bottom');
+				});
+
+				socket.on('range', function(value) {
+					value = value.value;
+					console.log('value range', value);
+					sanitizeBloc();
+
+					var screenWidth = $(document).width();
+
+					var newValue = screenWidth/100 * value;
+
+					$('.bloc').css('left', newValue+'px');
 				});
 			}
 

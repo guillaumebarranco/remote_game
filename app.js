@@ -20,6 +20,10 @@ io.on('connection', (client) => {
 		client.broadcast.emit('bottom', data);
 	});
 
+	client.on('range', (data) => {
+		client.broadcast.emit('range', data);
+	});
+
 	client.on('disconnect', () => {});
 });
 
